@@ -1,0 +1,34 @@
+#caption-mask {
+  position: fixed;
+  width: 50rem;
+  height: 2rem;
+  cursor: move;
+  z-index: 9999;
+
+  margin: 0 auto;
+  background: rgba(127, 127, 127, 0.96) border-box;
+  overflow: hidden;
+  border-radius: 0.3em;
+  box-shadow: 0 0 0 1px rgba(127, 127, 127, 0.96) inset,
+    0 0.5em 1em rgba(0, 0, 0, 0.6);
+  text-shadow: 0 1px 1px hsla(0, 0%, 100%, 0.3);
+
+  transition: background 0.2s;
+}
+
+#caption-mask:hover {
+  background: rgba(127, 127, 127, 0.25) border-box;
+}
+
+#caption-mask::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: -30px;
+  z-index: -1;
+  -webkit-filter: blur(20px);
+  filter: blur(20px);
+}
