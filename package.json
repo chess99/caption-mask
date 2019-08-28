@@ -1,0 +1,39 @@
+{
+  "name": "caption-mask",
+  "version": "0.0.3",
+  "description": "Caption Mask",
+  "main": "null",
+  "scripts": {
+    "build": "gulp build",
+    "buildPack": "gulp buildPack",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chess99/caption-mask.git"
+  },
+  "keywords": [
+    "Chrome extensions",
+    "caption"
+  ],
+  "author": "chess99",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chess99/caption-mask/issues"
+  },
+  "homepage": "https://github.com/chess99/caption-mask#readme",
+  "devDependencies": {
+    "del": "^5.1.0",
+    "gulp": "^4.0.2",
+    "gulp-replace": "^1.0.0",
+    "gulp-zip": "^5.0.0",
+    "parcel-bundler": "^1.12.3",
+    "typescript": "^3.5.3"
+  },
+  "dependencies": {
+    "@juggle/resize-observer": "^2.3.0",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
+    "react-router-dom": "^5.0.1"
+  }
+}

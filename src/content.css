@@ -1,0 +1,49 @@
+#caption-mask {
+  position: fixed;
+  cursor: move;
+  z-index: 9999;
+
+  margin: 0 auto;
+  background: rgba(127, 127, 127, 0.96) border-box;
+  overflow: hidden;
+  border-radius: 0.3em;
+  box-shadow: 0 0 0 1px rgba(127, 127, 127, 0.96) inset,
+    0 0.5em 1em rgba(0, 0, 0, 0.6);
+  text-shadow: 0 1px 1px hsla(0, 0%, 100%, 0.3);
+
+  transition: background 0.2s;
+
+  resize: both;
+}
+
+#caption-mask:hover {
+  background: rgba(127, 127, 127, 0.25) border-box;
+}
+
+#caption-mask::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: -30px;
+  z-index: -1;
+  -webkit-filter: blur(20px);
+  filter: blur(20px);
+}
+
+#caption-mask::after {
+  content: "";
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  width: 0;
+  height: 0;
+  border: solid transparent 10px;
+  border-top-color: transparent;
+  border-left-color: transparent;
+  cursor: se-resize;
+  -webkit-filter: drop-shadow(0 0 2px black);
+  filter: drop-shadow(0 0 2px black);
+}
