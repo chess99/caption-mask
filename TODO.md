@@ -6,8 +6,8 @@
 ----
 
 - [x] 拉伸
-- [ ] 构建系统
-- [ ] 记住mask尺寸 (DOM resize监听) [resize-observer-polyfill](https://github.com/que-etc/resize-observer-polyfill)
+- [x] 构建系统
+- [x] 记住mask尺寸 (DOM resize监听) [resize-observer-polyfill](https://github.com/que-etc/resize-observer-polyfill)
 
 ----
 
