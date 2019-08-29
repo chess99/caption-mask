@@ -16,6 +16,7 @@
     "<all_urls>"
   ],
   "web_accessible_resources": [
+    "inject.js",
     "*.woff2",
     "*.png",
     "*.gif"
@@ -26,11 +27,15 @@
     ],
     "persistent": true
   },
+  "browser_action": {
+    "default_icon": "icons/icon128.png",
+    "default_title": "press alt+k to toggle mask",
+    "default_popup": "popup.html"
+  },
   "content_scripts": [
     {
       "run_at": "document_end",
       "matches": [
-        // "*://open.163.com/movie/*"
         "<all_urls>"
       ],
       "js": [

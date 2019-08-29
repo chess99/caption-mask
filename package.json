@@ -1,6 +1,6 @@
 {
   "name": "caption-mask",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Caption Mask",
   "main": "null",
   "scripts": {
@@ -23,6 +23,8 @@
   },
   "homepage": "https://github.com/chess99/caption-mask#readme",
   "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "babel-plugin-import": "^1.12.1",
     "del": "^5.1.0",
     "gulp": "^4.0.2",
     "gulp-replace": "^1.0.0",
@@ -32,6 +34,7 @@
   },
   "dependencies": {
     "@juggle/resize-observer": "^2.3.0",
+    "antd": "^3.22.2",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-router-dom": "^5.0.1"

@@ -1,8 +1,6 @@
-import * as React from "react";
-import * as ReactDOM from "react-dom";
-
 import ResizeObserver from '@juggle/resize-observer';
 
+import addSomeEle from './SomeEle'
 import './content.css';
 
 
@@ -70,20 +68,26 @@ function loadMaskSizing() {
 
 function saveMaskSizing(maskEle) {
   var boxSizing = maskEle.getBoundingClientRect()
+  if (boxSizing.width === 0 && boxSizing.height === 0) return // TODO 关闭mask也会触发ResizeObserver
   localStorage.setItem('caption-mask-sizing', JSON.stringify(boxSizing))
 }
 
-function SomeEle() {
-  return (
-    <div id='some-ele'>
-      &nbsp;
-    </div>
-  )
+
+
+let maskOpend = false
+function loadMaskConfig() {
+  var str = localStorage.getItem('caption-mask-config')
+  // var cfg = str ? JSON.parse(str) : {}
+  var isOpen = str === 'on' ? true : false
+  return isOpen
+}
+
+function saveMaskConfig(maskOpend) {
+  localStorage.setItem('caption-mask-config', maskOpend ? 'on' : 'off')
 }
 
 
-
-function main() {
+function initMask() {
   let boxSizing = loadMaskSizing()
   boxTop = boxSizing.top
   boxLeft = boxSizing.left
@@ -97,10 +101,42 @@ function main() {
   });
 
   ro.observe(mask);
+  addSomeEle(mask)
 }
 
-main()
-ReactDOM.render(
-  <SomeEle />,
-  mask
-);
+
+
+function closeMask() {
+  document.body.removeChild(mask)
+}
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  // console.log(sender.tab ? "from a content script:" + sender.tab.url :"from the extension");
+  if (request.cmd == 'browserActionClicked') {
+    console.log('browserActionClicked');
+    toggleMaskAndSave()
+  }
+  sendResponse('我收到了你的消息！');
+});
+
+function toggleMaskAndSave() {
+  if (maskOpend) {
+    closeMask()
+    maskOpend = false
+  }
+  else {
+    initMask()
+    maskOpend = true
+  }
+  saveMaskConfig(maskOpend)
+}
+
+document.addEventListener('keyup', evt => {
+  if (evt.key === 'k' && evt.altKey && !evt.ctrlKey && !evt.shiftKey) {
+    toggleMaskAndSave()
+  }
+})
+
+maskOpend = loadMaskConfig()
+if (maskOpend) initMask()
+

@@ -3,6 +3,18 @@
 ## 说明
 
 插件相关的文件都在src下
+
+```bash
+src
+├─manifest.json
+├─icons
+├─background
+├─content
+├─inject
+├─popup
+└─devtool
+```
+
 manifest.json中的version在build时自动从package.json中获取
 
 ## 命令

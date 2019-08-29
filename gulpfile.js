@@ -41,8 +41,8 @@ const copyIcons = () => {
 }
 
 
-const parcelBuild = entryFile => () => {
-  return exec(`parcel build ${entryFile} --no-source-maps`, (error, stdout, stderr) => {
+const parcelBuild = (entryFile, outputFile) => () => {
+  return exec(`parcel build ${entryFile} --no-source-maps --out-file ${outputFile}`, (error, stdout, stderr) => {
     if (error) {
       console.error(`exec error: ${error}`);
       return;
@@ -51,10 +51,11 @@ const parcelBuild = entryFile => () => {
     if (stderr) { console.log(`stderr: ${stderr}`); }
   });
 };
-task('buildContent', parcelBuild('./src/content.tsx'))
-task('buildBackgound', parcelBuild('./src/background.ts'))
-task('buildInject', parcelBuild('./src/inject.ts'))
-const buildJs = parallel('buildContent', 'buildBackgound', 'buildInject')
+task('buildContent', parcelBuild('./src/content/content.ts', 'content.js'))
+task('buildBackgound', parcelBuild('./src/background/background.ts', 'background.js'))
+task('buildInject', parcelBuild('./src/inject/inject.ts', 'inject.js'))
+task('buildPopup', parcelBuild('./src/popup/popup.html', 'popup.html'))
+const buildJs = parallel('buildContent', 'buildBackgound', 'buildInject', 'buildPopup')
 const build = series(cleanDist, parallel(buildJs, manifest, copyIcons))
 
 const pack = () =>
