@@ -3,35 +3,58 @@ import ResizeObserver from '@juggle/resize-observer';
 import addSomeEle from './SomeEle'
 import './content.css';
 
+const MASK_ID = 'caption-mask'
 
-var mouseX
-var mouseY
-var boxTop;
-var boxLeft;
-var mask
+let mouseX
+let mouseY
+let boxTop;
+let boxLeft;
 
+function initMask() {
+  let mask = document.getElementById(MASK_ID)
 
+  if (mask) {
+    console.log('initMask: already has a mask')
+    return mask
+  }
 
-function initMaskEle(boxSizing) {
-  var mask = document.createElement('div')
-  mask.id = 'caption-mask'
+  let boxSizing = loadMaskSizing()
+  boxTop = boxSizing.top
+  boxLeft = boxSizing.left
 
+  mask = document.createElement('div')
+  mask.id = MASK_ID
   mask.style.position = 'fixed'
   mask.style.width = `${boxSizing.width}px`;
   mask.style.height = `${boxSizing.height}px`;
   mask.style.top = `${boxSizing.top}px`;
   mask.style.left = `${boxSizing.left}px`;
 
+  // listen drag
+  mask.addEventListener('mousedown', onMouseDown)
+
+  // listen resize
+  const ro = new ResizeObserver((entries, observer) => {
+    console.log('mask has resized!');
+    saveMaskSizing(mask)
+  });
+  ro.observe(mask);
+
   document.body.appendChild(mask)
+  addSomeEle(mask)
   return mask
+}
+
+function isMaskExist() {
+  return !!document.getElementById(MASK_ID)
 }
 
 function onMouseDown(event) {
   mouseX = event.pageX;
   mouseY = event.pageY;
 
-
-  var p = mask.getBoundingClientRect()
+  let mask = document.getElementById(MASK_ID)
+  let p = mask.getBoundingClientRect()
   boxTop = p.top;
   boxLeft = p.left;
 
@@ -46,6 +69,8 @@ function onMouseDown(event) {
 function onMouseMove(event) {
   boxTop = boxTop + event.pageY - mouseY
   boxLeft = boxLeft + event.pageX - mouseX
+
+  let mask = document.getElementById(MASK_ID)
   mask.style.top = `${boxTop}px`
   mask.style.left = `${boxLeft}px`
 
@@ -57,86 +82,36 @@ function onMouseUp(event) {
   document.removeEventListener('mousemove', onMouseMove, false);
   document.removeEventListener('mouseup', onMouseUp, false);
 
+  let mask = document.getElementById(MASK_ID)
   saveMaskSizing(mask)
 }
 
 function loadMaskSizing() {
-  var boxSizingStr = localStorage.getItem('caption-mask-sizing')
-  var boxSizing = boxSizingStr ? JSON.parse(boxSizingStr) : { top: 0, left: 0, width: 800, height: 32 }
+  let boxSizingStr = localStorage.getItem('caption-mask-sizing')
+  let boxSizing = boxSizingStr ? JSON.parse(boxSizingStr) : { top: 0, left: 0, width: 800, height: 32 }
   return boxSizing
 }
 
 function saveMaskSizing(maskEle) {
-  var boxSizing = maskEle.getBoundingClientRect()
+  let boxSizing = maskEle.getBoundingClientRect()
   if (boxSizing.width === 0 && boxSizing.height === 0) return // TODO 关闭mask也会触发ResizeObserver
   localStorage.setItem('caption-mask-sizing', JSON.stringify(boxSizing))
 }
 
-
-
-let maskOpend = false
-function loadMaskConfig() {
-  var str = localStorage.getItem('caption-mask-config')
-  // var cfg = str ? JSON.parse(str) : {}
-  var isOpen = str === 'on' ? true : false
-  return isOpen
-}
-
-function saveMaskConfig(maskOpend) {
-  localStorage.setItem('caption-mask-config', maskOpend ? 'on' : 'off')
-}
-
-
-function initMask() {
-  let boxSizing = loadMaskSizing()
-  boxTop = boxSizing.top
-  boxLeft = boxSizing.left
-
-  mask = initMaskEle(boxSizing)
-  mask.addEventListener('mousedown', onMouseDown)
-
-  const ro = new ResizeObserver((entries, observer) => {
-    console.log('mask has resized!');
-    saveMaskSizing(mask)
-  });
-
-  ro.observe(mask);
-  addSomeEle(mask)
-}
-
-
-
 function closeMask() {
+  let mask = document.getElementById(MASK_ID)
   document.body.removeChild(mask)
 }
 
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  // console.log(sender.tab ? "from a content script:" + sender.tab.url :"from the extension");
-  if (request.cmd == 'browserActionClicked') {
-    console.log('browserActionClicked');
-    toggleMaskAndSave()
-  }
-  sendResponse('我收到了你的消息！');
-});
-
-function toggleMaskAndSave() {
-  if (maskOpend) {
-    closeMask()
-    maskOpend = false
-  }
-  else {
-    initMask()
-    maskOpend = true
-  }
-  saveMaskConfig(maskOpend)
+function toggleMask() {
+  if (isMaskExist()) closeMask()
+  else initMask()
 }
 
 document.addEventListener('keyup', evt => {
   if (evt.key === 'k' && evt.altKey && !evt.ctrlKey && !evt.shiftKey) {
-    toggleMaskAndSave()
+    toggleMask()
   }
 })
 
-maskOpend = loadMaskConfig()
-if (maskOpend) initMask()
-
+toggleMask()
