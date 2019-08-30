@@ -101,6 +101,8 @@ function saveMaskSizing(maskEle) {
 function closeMask() {
   let mask = document.getElementById(MASK_ID)
   document.body.removeChild(mask)
+  document.removeEventListener('mousemove', onMouseMove, false);
+  document.removeEventListener('mouseup', onMouseUp, false);
 }
 
 function toggleMask() {
@@ -108,10 +110,16 @@ function toggleMask() {
   else initMask()
 }
 
-document.addEventListener('keyup', evt => {
+function maskToggleHandler(evt) {
   if (evt.key === 'k' && evt.altKey && !evt.ctrlKey && !evt.shiftKey) {
     toggleMask()
   }
-})
+}
+
+if (!window.captionMaskNamespace) {
+  window.captionMaskNamespace = {}
+  window.captionMaskNamespace.maskToggleHandler = maskToggleHandler
+}
+document.addEventListener('keyup', window.captionMaskNamespace.maskToggleHandler)
 
 toggleMask()
