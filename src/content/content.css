@@ -1,7 +1,7 @@
 #caption-mask {
   position: fixed;
   cursor: move;
-  z-index: 9999;
+  z-index: 2147483647;
 
   margin: 0 auto;
   background: rgba(127, 127, 127, 0.96) border-box;
@@ -12,8 +12,6 @@
   text-shadow: 0 1px 1px hsla(0, 0%, 100%, 0.3);
 
   transition: background 0.2s;
-
-  resize: both;
 }
 
 #caption-mask:hover {
