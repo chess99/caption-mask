@@ -1,6 +1,7 @@
 node_modules
 
 .cache
+.parcel-cache
 build
 dist
 dist-pack

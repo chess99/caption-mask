@@ -1,7 +1,15 @@
-//  programmatic inject to avoid "Broad host permissions"
-// https://developer.chrome.com/extensions/activeTab
-chrome.browserAction.onClicked.addListener(function (tab) {
-  console.log('chrome.browserAction.onClicked')
-  chrome.tabs.executeScript(null, { file: 'content.js' });
-  chrome.tabs.insertCSS(null, { file: 'content.css' });
+chrome.action.onClicked.addListener(function (tab) {
+  if (typeof tab.id !== "undefined") {
+    console.log("chrome.action.onClicked");
+    chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      files: ["content.js"],
+    });
+    chrome.scripting.insertCSS({
+      target: { tabId: tab.id },
+      files: ["content.css"],
+    });
+  } else {
+    console.error("Tab ID is undefined.");
+  }
 });

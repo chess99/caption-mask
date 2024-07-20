@@ -4,31 +4,24 @@
   "description": "Caption Mask",
   "homepage_url": "https://github.com/chess99/caption-mask",
   "author": "chess99",
-  "manifest_version": 2,
-  "minimum_chrome_version": "60",
+  "manifest_version": 3,
+  "minimum_chrome_version": "88",
   "icons": {
     "128": "icons/icon128.png"
   },
-  "permissions": [
-    "storage",
-    "activeTab"
-  ],
-  "optional_permissions": [
-    "<all_urls>"
-  ],
+  "permissions": ["scripting", "storage", "activeTab"],
+  "host_permissions": ["<all_urls>"],
+  "optional_permissions": [],
   "web_accessible_resources": [
-    "inject.js",
-    "*.woff2",
-    "*.png",
-    "*.gif"
+    {
+      "resources": ["inject.js", "*.woff2", "*.png", "*.gif"],
+      "matches": ["<all_urls>"]
+    }
   ],
   "background": {
-    "scripts": [
-      "background.js"
-    ],
-    "persistent": true
+    "service_worker": "background.js"
   },
-  "browser_action": {
+  "action": {
     "default_icon": "icons/icon128.png",
     "default_title": "press alt+k to toggle mask"
   }

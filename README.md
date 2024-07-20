@@ -2,7 +2,7 @@
 
 ## 说明
 
-插件相关的文件都在src下
+插件相关的文件都在 src 下
 
 ```bash
 src
@@ -15,25 +15,18 @@ src
 └─devtool
 ```
 
-manifest.json中的version在build时自动从package.json中获取
+manifest.json 中的 version 在 build 时自动从 package.json 中获取
 
 ## 命令
 
 ```bash
 
 # 生成所有文件到dist
-npm run buld
-# or
-gulp build
+pnpm build
 
 # build到dist且打包成zip到dist-pack
-npm run buildPack
-# or
-gulp buildPack
-# or
-gulp
+pnpm buildPack
 
 # 删除所有生成的文件, 包括dist和dist-pack
-gulp clean
-
+pnpm clean
 ```
