@@ -1,28 +1,28 @@
 {
-  "name": "CaptionMask",
+  "name": "Caption Mask",
+  "short_name": "Caption Mask",
   "version": "$VERSION",
-  "description": "Caption Mask",
+  "description": "用可拖动、可缩放的遮罩挡住视频字幕，帮助你进行无字幕听力练习。",
   "homepage_url": "https://github.com/chess99/caption-mask",
   "author": "chess99",
   "manifest_version": 3,
-  "minimum_chrome_version": "88",
+  "minimum_chrome_version": "95",
   "icons": {
     "128": "icons/icon128.png"
   },
-  "permissions": ["scripting", "storage", "activeTab"],
-  "host_permissions": ["<all_urls>"],
-  "optional_permissions": [],
-  "web_accessible_resources": [
-    {
-      "resources": ["inject.js", "*.woff2", "*.png", "*.gif"],
-      "matches": ["<all_urls>"]
-    }
-  ],
+  "permissions": ["activeTab", "scripting", "storage"],
   "background": {
     "service_worker": "background.js"
   },
   "action": {
     "default_icon": "icons/icon128.png",
-    "default_title": "press alt+k to toggle mask"
+    "default_title": "显示或隐藏字幕遮罩（Alt+K）"
+  },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Alt+K"
+      }
+    }
   }
 }

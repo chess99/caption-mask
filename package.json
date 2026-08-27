@@ -1,12 +1,16 @@
 {
   "name": "caption-mask",
-  "version": "0.0.8",
-  "description": "Caption Mask",
+  "version": "1.0.0",
+  "description": "A minimal Chrome extension that masks video captions for listening practice.",
+  "type": "module",
   "scripts": {
-    "build": "gulp build",
-    "buildPack": "gulp buildPack",
-    "clean": "gulp clean",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "node scripts/build.mjs",
+    "build:pack": "node scripts/build.mjs --pack",
+    "buildPack": "pnpm build:pack",
+    "clean": "node scripts/clean.mjs",
+    "test": "tsx --test tests/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "verify": "pnpm typecheck && pnpm test && pnpm build:pack"
   },
   "repository": {
     "type": "git",
@@ -23,22 +27,11 @@
   },
   "homepage": "https://github.com/chess99/caption-mask#readme",
   "devDependencies": {
-    "@babel/core": "^7.24.9",
     "@types/chrome": "^0.0.268",
-    "babel-plugin-import": "^1.13.8",
-    "del": "^7.1.0",
-    "gulp": "^5.0.0",
-    "gulp-replace": "^1.1.4",
-    "gulp-zip": "^6.0.0",
-    "parcel": "^2.12.0",
-    "process": "^0.11.10",
-    "typescript": "^5.5.3"
-  },
-  "dependencies": {
-    "@juggle/resize-observer": "^3.4.0",
-    "antd": "^5.19.3",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "^6.25.1"
+    "@types/node": "^22.10.2",
+    "esbuild": "^0.28.2",
+    "fflate": "^0.8.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
   }
 }
