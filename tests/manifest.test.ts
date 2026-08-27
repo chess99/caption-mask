@@ -11,4 +11,7 @@ test("manifest uses MV3 and only the reviewed minimum permissions", async () => 
   assert.equal("host_permissions" in manifest, false);
   assert.equal("content_scripts" in manifest, false);
   assert.equal("web_accessible_resources" in manifest, false);
+  assert.deepEqual(manifest.commands, {
+    _execute_action: { suggested_key: { default: "Alt+M" } },
+  });
 });

@@ -16,12 +16,12 @@
   },
   "action": {
     "default_icon": "icons/icon128.png",
-    "default_title": "显示或隐藏字幕遮罩（Alt+K）"
+    "default_title": "显示或隐藏字幕遮罩（Alt+M）"
   },
   "commands": {
     "_execute_action": {
       "suggested_key": {
-        "default": "Alt+K"
+        "default": "Alt+M"
       }
     }
   }
