@@ -1,6 +1,6 @@
 {
   "name": "caption-mask",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A minimal Chrome extension that masks video captions for listening practice.",
   "type": "module",
   "scripts": {

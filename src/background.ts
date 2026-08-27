@@ -11,3 +11,14 @@ chrome.action.onClicked.addListener((tab) => {
       console.warn("Caption Mask cannot run on this page.", error);
     });
 });
+
+chrome.runtime.onMessage.addListener((message: unknown) => {
+  if (
+    typeof message === "object" &&
+    message !== null &&
+    "type" in message &&
+    message.type === "caption-mask:open-options"
+  ) {
+    void chrome.runtime.openOptionsPage();
+  }
+});

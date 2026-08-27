@@ -16,6 +16,7 @@ await build({
   entryPoints: {
     background: path.join(root, "src/background.ts"),
     content: path.join(root, "src/content.ts"),
+    options: path.join(root, "src/options/options.ts"),
   },
   outdir: outDir,
   bundle: true,
@@ -33,6 +34,8 @@ if (manifest.includes("$VERSION")) throw new Error("Manifest version replacement
 JSON.parse(manifest);
 await writeFile(path.join(outDir, "manifest.json"), `${manifest.trim()}\n`);
 await copyFile(path.join(root, "src/icons/icon128.png"), path.join(outDir, "icons/icon128.png"));
+await copyFile(path.join(root, "src/options/options.html"), path.join(outDir, "options.html"));
+await copyFile(path.join(root, "src/options/options.css"), path.join(outDir, "options.css"));
 
 async function collectFiles(directory, relative = "") {
   const files = {};

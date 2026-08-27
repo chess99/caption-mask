@@ -7,6 +7,12 @@ import {
   type MaskRect,
   type ViewportSize,
 } from "./geometry";
+import {
+  colorWithOpacity,
+  loadAppearanceSettings,
+  subscribeToAppearance,
+  type AppearanceSettings,
+} from "./settings";
 
 const HOST_ID = "caption-mask-extension-root";
 const STORAGE_KEY = "captionMask.rect.v1";
@@ -36,7 +42,7 @@ const styles = `
     cursor: move;
     border: 1px solid rgba(255, 255, 255, 0.24);
     border-radius: 5px;
-    background: rgba(63, 63, 63, 0.96);
+    background: var(--caption-mask-background, rgba(63, 63, 63, 0.96));
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
     transition: background-color 160ms ease;
     touch-action: none;
@@ -44,7 +50,42 @@ const styles = `
   }
 
   .mask:hover {
-    background: rgba(63, 63, 63, 0.25);
+    background: var(--caption-mask-hover-background, rgba(63, 63, 63, 0.25));
+  }
+
+  .settings-button {
+    position: absolute;
+    top: 3px;
+    right: 4px;
+    display: grid;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    place-items: center;
+    border: 0;
+    border-radius: 5px;
+    opacity: 0;
+    background: rgba(0, 0, 0, 0.5);
+    color: rgba(255, 255, 255, 0.94);
+    cursor: pointer;
+    font: 14px/1 ui-sans-serif, system-ui, sans-serif;
+    pointer-events: none;
+    transition: opacity 120ms ease, background-color 120ms ease;
+  }
+
+  .mask:hover .settings-button,
+  .settings-button:focus-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .settings-button:hover {
+    background: rgba(0, 0, 0, 0.75);
+  }
+
+  .settings-button:focus-visible {
+    outline: 2px solid white;
+    outline-offset: 1px;
   }
 
   .resize-handle {
@@ -87,6 +128,17 @@ function applyRect(element: HTMLElement, rect: MaskRect): void {
   element.style.left = `${Math.round(rect.left)}px`;
   element.style.width = `${Math.round(rect.width)}px`;
   element.style.height = `${Math.round(rect.height)}px`;
+}
+
+function applyAppearance(element: HTMLElement, settings: AppearanceSettings): void {
+  element.style.setProperty(
+    "--caption-mask-background",
+    colorWithOpacity(settings.color, settings.opacity),
+  );
+  element.style.setProperty(
+    "--caption-mask-hover-background",
+    colorWithOpacity(settings.color, settings.hoverOpacity),
+  );
 }
 
 function readChromeStorage(): Promise<MaskRect | null> {
@@ -140,10 +192,16 @@ function mountMask(): CaptionMaskController {
   const mask = document.createElement("div");
   mask.className = "mask";
   mask.setAttribute("aria-label", "字幕遮罩，可拖动");
+  const settingsButton = document.createElement("button");
+  settingsButton.className = "settings-button";
+  settingsButton.type = "button";
+  settingsButton.title = "打开 Caption Mask 设置";
+  settingsButton.setAttribute("aria-label", "打开 Caption Mask 设置");
+  settingsButton.textContent = "⚙";
   const resizeHandle = document.createElement("div");
   resizeHandle.className = "resize-handle";
   resizeHandle.setAttribute("aria-label", "调整字幕遮罩大小");
-  mask.append(resizeHandle);
+  mask.append(settingsButton, resizeHandle);
   shadow.append(style, mask);
 
   let destroyed = false;
@@ -194,7 +252,7 @@ function mountMask(): CaptionMaskController {
   };
 
   const onMaskPointerDown = (event: PointerEvent): void => {
-    if (event.target === resizeHandle) return;
+    if (event.target === resizeHandle || event.target === settingsButton) return;
     startPointerOperation(event, "move");
   };
   const onResizePointerDown = (event: PointerEvent): void => {
@@ -209,12 +267,29 @@ function mountMask(): CaptionMaskController {
     if (destroyed) return;
     applyRect(host, fitRectToViewport(rectFromElement(host), getViewport()));
   };
+  const onSettingsPointerDown = (event: PointerEvent): void => {
+    event.stopPropagation();
+  };
+  const onSettingsClick = (event: MouseEvent): void => {
+    event.stopPropagation();
+    void chrome.runtime.sendMessage({ type: "caption-mask:open-options" });
+  };
 
   mask.addEventListener("pointerdown", onMaskPointerDown);
   resizeHandle.addEventListener("pointerdown", onResizePointerDown);
+  settingsButton.addEventListener("pointerdown", onSettingsPointerDown);
+  settingsButton.addEventListener("click", onSettingsClick);
   document.addEventListener("fullscreenchange", onFullscreenChange);
   window.addEventListener("resize", onWindowResize);
   appendToCurrentRoot();
+
+  const removeAppearanceSubscription = subscribeToAppearance((settings) => {
+    if (!destroyed) applyAppearance(mask, settings);
+  });
+
+  void loadAppearanceSettings().then((settings) => {
+    if (!destroyed) applyAppearance(mask, settings);
+  });
 
   void loadRect().then((rect) => {
     if (!destroyed && !hasInteracted) {
@@ -232,8 +307,11 @@ function mountMask(): CaptionMaskController {
       removePointerListeners?.();
       mask.removeEventListener("pointerdown", onMaskPointerDown);
       resizeHandle.removeEventListener("pointerdown", onResizePointerDown);
+      settingsButton.removeEventListener("pointerdown", onSettingsPointerDown);
+      settingsButton.removeEventListener("click", onSettingsClick);
       document.removeEventListener("fullscreenchange", onFullscreenChange);
       window.removeEventListener("resize", onWindowResize);
+      removeAppearanceSubscription();
       host.remove();
     },
   };

@@ -14,6 +14,10 @@
   "background": {
     "service_worker": "background.js"
   },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
   "action": {
     "default_icon": "icons/icon128.png",
     "default_title": "显示或隐藏字幕遮罩（Alt+M）"

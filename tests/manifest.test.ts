@@ -14,4 +14,8 @@ test("manifest uses MV3 and only the reviewed minimum permissions", async () => 
   assert.deepEqual(manifest.commands, {
     _execute_action: { suggested_key: { default: "Alt+M" } },
   });
+  assert.deepEqual(manifest.options_ui, {
+    page: "options.html",
+    open_in_tab: true,
+  });
 });

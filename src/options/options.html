@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Caption Mask 设置</title>
+    <link rel="stylesheet" href="options.css" />
+    <script src="options.js" defer></script>
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="page-header">
+        <img src="icons/icon128.png" width="48" height="48" alt="" />
+        <div>
+          <p class="eyebrow">Caption Mask</p>
+          <h1>遮罩外观</h1>
+          <p>调整后保存，所有已打开的遮罩会立即更新。</p>
+        </div>
+      </header>
+
+      <form id="appearance-form">
+        <section class="settings-card" aria-labelledby="appearance-heading">
+          <div class="card-heading">
+            <div>
+              <h2 id="appearance-heading">颜色与透明度</h2>
+              <p>悬停透明度越低，鼠标移入时越容易看到字幕。</p>
+            </div>
+            <div id="mask-preview" class="mask-preview" aria-label="遮罩效果预览">
+              <span>字幕预览</span>
+              <div></div>
+            </div>
+          </div>
+
+          <label class="setting-row" for="mask-color">
+            <span>
+              <strong>遮罩颜色</strong>
+              <small>默认使用深灰色</small>
+            </span>
+            <input id="mask-color" name="color" type="color" />
+          </label>
+
+          <label class="setting-row setting-row-range" for="mask-opacity">
+            <span>
+              <strong>默认不透明度</strong>
+              <small>遮挡字幕时的深浅</small>
+            </span>
+            <span class="range-control">
+              <input id="mask-opacity" name="opacity" type="range" min="5" max="100" step="1" />
+              <output id="mask-opacity-value" for="mask-opacity"></output>
+            </span>
+          </label>
+
+          <label class="setting-row setting-row-range" for="hover-opacity">
+            <span>
+              <strong>悬停不透明度</strong>
+              <small>鼠标移入遮罩时的深浅</small>
+            </span>
+            <span class="range-control">
+              <input id="hover-opacity" name="hoverOpacity" type="range" min="0" max="100" step="1" />
+              <output id="hover-opacity-value" for="hover-opacity"></output>
+            </span>
+          </label>
+        </section>
+
+        <div class="form-actions">
+          <p id="save-status" role="status" aria-live="polite"></p>
+          <button id="reset-button" class="button button-secondary" type="button">恢复默认</button>
+          <button class="button button-primary" type="submit">保存设置</button>
+        </div>
+      </form>
+    </main>
+  </body>
+</html>
